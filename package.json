@@ -12,6 +12,6 @@
     "vite": "^4.2.0"
   },
   "dependencies": {
-    "firebase": "^8.2.10"
+    "firebase": "^9.18.0"
   }
 }
