@@ -1,9 +1,6 @@
 import './style.css';
 
-// import firebase from 'firebase/app';
 import { getApps, initializeApp } from 'firebase/app';
-
-// import 'firebase/firestore'
 import { getFirestore, collection, doc, onSnapshot, setDoc, getDoc, updateDoc, query } from 'firebase/firestore';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -17,14 +14,10 @@ const firebaseConfig = {
   measurementId: "G-DMD8BBFPMY"
 };
 
-// if (!firebase.apps.length) {
-//   firebase.initializeApp(firebaseConfig);
-// }
 if (!getApps.length) {
   initializeApp(firebaseConfig);
 } 
 
-// const firestore = firebase.firestore();
 export const db = getFirestore();
 
 const servers = {
@@ -79,20 +72,13 @@ webcamButton.onclick = async () => {
 // 2. Create an offer
 callButton.onclick = async () => {
   // Reference Firestore collections for signaling
-
-  // const callDoc = firestore.collection('calls').doc();
   const callDoc = doc(collection(db,'calls'));
-
-  // const offerCandidates = callDoc.collection('offerCandidates');
-  // const answerCandidates = callDoc.collection('answerCandidates');
   const offerCandidates = doc(collection(callDoc,'offerCandidates')); 
-  // const answerCandidates = doc(collection(callDoc,'answerCandidates'));
 
   callInput.value = callDoc.id;
 
   // Get candidates for caller, save to db
   pc.onicecandidate = (event) => {
-    // event.candidate && offerCandidates.add(event.candidate.toJSON());
     event.candidate && setDoc(offerCandidates, event.candidate.toJSON() );
   };
 
@@ -105,17 +91,9 @@ callButton.onclick = async () => {
     type: offerDescription.type,
   };
 
-  // await callDoc.set({ offer });
   await setDoc(callDoc,{ offer })
 
   // Listen for remote answer
-  // callDoc.onSnapshot((snapshot) => {
-  //   const data = snapshot.data();
-  //   if (!pc.currentRemoteDescription && data?.answer) {
-  //     const answerDescription = new RTCSessionDescription(data.answer);
-  //     pc.setRemoteDescription(answerDescription);
-  //   }
-  // });
   onSnapshot(callDoc, (snapshot) => {
     const data = snapshot.data();
     if (!pc.currentRemoteDescription && data?.answer) {
@@ -124,17 +102,7 @@ callButton.onclick = async () => {
     }
   });
 
-  
-
   // When answered, add candidate to peer connection
-  // answerCandidates.onSnapshot((snapshot) => {
-  //   snapshot.docChanges().forEach((change) => {
-  //     if (change.type === 'added') {
-  //       const candidate = new RTCIceCandidate(change.doc.data());
-  //       pc.addIceCandidate(candidate);
-  //     }
-  //   });
-  // });
   const answerQueries = query(collection(callDoc,'answerCandidates'));
   onSnapshot(answerQueries, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
@@ -152,23 +120,15 @@ callButton.onclick = async () => {
 answerButton.onclick = async () => {
   const callId = callInput.value;
 
-  // const callDoc = firestore.collection('calls').doc(callId);
   const callDoc = doc(collection(db,'calls'), callId);
-
-  // const answerCandidates = callDoc.collection('answerCandidates');
-  // const offerCandidates = callDoc.collection('offerCandidates');
   const answerCandidates = doc(collection(callDoc,'answerCandidates'));
-  // const offerCandidates = doc(collection(callDoc,'offerCandidates'));
 
   pc.onicecandidate = (event) => {
-    // event.candidate && answerCandidates.add(event.candidate.toJSON());
     event.candidate && setDoc(answerCandidates,event.candidate.toJSON());
   };
 
-  // const callData = (await callDoc.get()).data();
   const callSnap = (await getDoc(callDoc));
   const callData = callSnap.data();
-
 
   const offerDescription = callData.offer;
   await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
@@ -181,19 +141,8 @@ answerButton.onclick = async () => {
     sdp: answerDescription.sdp,
   };
 
-  // await callDoc.update({ answer });
   await updateDoc(callDoc,{ answer });
 
-
-  // offerCandidates.onSnapshot((snapshot) => {
-  //   snapshot.docChanges().forEach((change) => {
-  //     console.log(change);
-  //     if (change.type === 'added') {
-  //       let data = change.doc.data();
-  //       pc.addIceCandidate(new RTCIceCandidate(data));
-  //     }
-  //   });
-  // });
   const offerQueries = query(collection(callDoc,'offerCandidates'));
   onSnapshot(offerQueries,(snapshot) => {
     snapshot.docChanges().forEach((change) => {
