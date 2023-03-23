@@ -4,7 +4,7 @@ import './style.css';
 import { getApps, initializeApp } from 'firebase/app';
 
 // import 'firebase/firestore'
-import { getFirestore, collection, doc, onSnapshot, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, onSnapshot, setDoc, getDoc, updateDoc, query } from 'firebase/firestore';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -85,18 +85,16 @@ callButton.onclick = async () => {
 
   // const offerCandidates = callDoc.collection('offerCandidates');
   // const answerCandidates = callDoc.collection('answerCandidates');
-  const offerCandidates = collection(callDoc,'offerCandidates'); // ?
-  const answerCandidates = collection(callDoc,'answerCandidates');
-  console.log("Checkpoint 1")
+  const offerCandidates = doc(collection(callDoc,'offerCandidates')); 
+  // const answerCandidates = doc(collection(callDoc,'answerCandidates'));
 
   callInput.value = callDoc.id;
 
   // Get candidates for caller, save to db
   pc.onicecandidate = (event) => {
     // event.candidate && offerCandidates.add(event.candidate.toJSON());
-    event.candidate && setDoc(offerCandidates,event.candidate.toJSON());
+    event.candidate && setDoc(offerCandidates, event.candidate.toJSON() );
   };
-  console.log("Checkpoint 2")
 
   // Create offer
   const offerDescription = await pc.createOffer();
@@ -107,10 +105,8 @@ callButton.onclick = async () => {
     type: offerDescription.type,
   };
 
-  console.log("Checkpoint 2.5")
   // await callDoc.set({ offer });
   await setDoc(callDoc,{ offer })
-  console.log("Checkpoint 3")
 
   // Listen for remote answer
   // callDoc.onSnapshot((snapshot) => {
@@ -139,7 +135,8 @@ callButton.onclick = async () => {
   //     }
   //   });
   // });
-  onSnapshot(answerCandidates, (snapshot) => {
+  const answerQueries = query(collection(callDoc,'answerCandidates'));
+  onSnapshot(answerQueries, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === 'added') {
         const candidate = new RTCIceCandidate(change.doc.data());
@@ -147,8 +144,6 @@ callButton.onclick = async () => {
       }
     });
   });
-
-  console.log("Checkpoint 4")
 
   hangupButton.disabled = false;
 };
@@ -162,8 +157,8 @@ answerButton.onclick = async () => {
 
   // const answerCandidates = callDoc.collection('answerCandidates');
   // const offerCandidates = callDoc.collection('offerCandidates');
-  const answerCandidates = collection(callDoc,'answerCandidates');
-  const offerCandidates = collection(callDoc,'offerCandidates');
+  const answerCandidates = doc(collection(callDoc,'answerCandidates'));
+  // const offerCandidates = doc(collection(callDoc,'offerCandidates'));
 
   pc.onicecandidate = (event) => {
     // event.candidate && answerCandidates.add(event.candidate.toJSON());
@@ -199,7 +194,8 @@ answerButton.onclick = async () => {
   //     }
   //   });
   // });
-  onSnapshot(offerCandidates,(snapshot) => {
+  const offerQueries = query(collection(callDoc,'offerCandidates'));
+  onSnapshot(offerQueries,(snapshot) => {
     snapshot.docChanges().forEach((change) => {
       console.log(change);
       if (change.type === 'added') {
