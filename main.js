@@ -1,18 +1,33 @@
 import './style.css';
 
+// import { getAuth } from "firebase/auth"
 import { getApps, initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, onSnapshot, setDoc, getDoc, updateDoc, query } from 'firebase/firestore';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+// webrtc-firebase
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDUkeEHD2fh-qy9o17AW8K8SPkfDD8I__8",
+//   authDomain: "webrtc-firebase-a2ec9.firebaseapp.com",
+//   projectId: "webrtc-firebase-a2ec9",
+//   storageBucket: "webrtc-firebase-a2ec9.appspot.com",
+//   messagingSenderId: "635477926287",
+//   appId: "1:635477926287:web:62e1ed5fafdb0fd331abfa",
+//   measurementId: "G-DMD8BBFPMY"
+// };
+
+// bright paw
 const firebaseConfig = {
-  apiKey: "AIzaSyDUkeEHD2fh-qy9o17AW8K8SPkfDD8I__8",
-  authDomain: "webrtc-firebase-a2ec9.firebaseapp.com",
-  projectId: "webrtc-firebase-a2ec9",
-  storageBucket: "webrtc-firebase-a2ec9.appspot.com",
-  messagingSenderId: "635477926287",
-  appId: "1:635477926287:web:62e1ed5fafdb0fd331abfa",
-  measurementId: "G-DMD8BBFPMY"
+  apiKey: "AIzaSyC0fLXTOo2wQnj-fXuTSxbqWqrIXo8-BaQ",
+  authDomain: "brightpaw-d6fd6.firebaseapp.com",
+  projectId: "brightpaw-d6fd6",
+  storageBucket: "brightpaw-d6fd6.appspot.com",
+  messagingSenderId: "734405969968",
+  appId: "1:734405969968:web:5699ba55469311deaac5f5",
+  measurementId: "G-7LR6Y73SHF"
 };
+
 
 if (!getApps.length) {
   initializeApp(firebaseConfig);
@@ -33,6 +48,11 @@ const servers = {
 const pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
+
+// get user firebase id
+// const auth = getAuth();
+// const uid = auth.currentUser.uid;
+const uid = "RJ0pPZEpmqPdiwMNBsuErIKU8zI3"; // hardcode my uid
 
 // HTML elements
 const webcamButton = document.getElementById('webcamButton');
@@ -72,7 +92,9 @@ webcamButton.onclick = async () => {
 // 2. Create an offer
 callButton.onclick = async () => {
   // Reference Firestore collections for signaling
-  const callDoc = doc(collection(db,'calls'));
+  // const callDoc = doc(collection(db,'calls'));
+  const callDoc = doc(collection(db,'users',`${uid}`,'calls'));
+
   const offerCandidates = doc(collection(callDoc,'offerCandidates')); 
 
   callInput.value = callDoc.id;
@@ -120,7 +142,9 @@ callButton.onclick = async () => {
 answerButton.onclick = async () => {
   const callId = callInput.value;
 
-  const callDoc = doc(collection(db,'calls'), callId);
+  // const callDoc = doc(collection(db,'calls'), callId);
+  const callDoc = doc(collection(db,'users',`${uid}`,'calls'), callId);
+
   const answerCandidates = doc(collection(callDoc,'answerCandidates'));
 
   pc.onicecandidate = (event) => {
