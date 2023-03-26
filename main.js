@@ -69,10 +69,10 @@ webcamButton.onclick = async () => {
   console.log('before local stream grab');
   // localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
   // localStream = await navigator.mediaDevices.webkitGetUserMedia({ video: true, audio: true })
-  localStream = await navigator.mozGetUserMedia({ video: true });
+  // localStream = await navigator.mozGetUserMedia({ video: true });
   // localStream = await navigator.mediaDevices.msGetUserMedia({ video: true, audio: true });
   // window.navigator.mediaDevices.getUserMedia({video: true}).then((stream => console.log(stream)));
-  // localStream = await navigator.mediaDevices.getUserMedia({ video: true });
+  localStream = await navigator.mediaDevices.getUserMedia({ video: true });
   // navigator.mediaDevices.getUserMedia({
   //     video: true
   // }).then(
