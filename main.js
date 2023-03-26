@@ -71,7 +71,7 @@ webcamButton.onclick = async () => {
   // localStream = await navigator.mediaDevices.webkitGetUserMedia({ video: true, audio: true })
   // localStream = await navigator.mediaDevices.mozGetUserMedia({ video: true, audio: true });
   // localStream = await navigator.mediaDevices.msGetUserMedia({ video: true, audio: true });
-  window.navigator.mediaDevices.getUserMedia({video: true}).then((stream => console.log(stream)));
+  localStream = window.navigator.mediaDevices.getUserMedia({video: true}).then((stream => console.log(stream)));
   console.log('after local stream grab');
 
   remoteStream = new MediaStream();
