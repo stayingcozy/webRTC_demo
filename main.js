@@ -65,43 +65,29 @@ const hangupButton = document.getElementById('hangupButton');
 
 // 1. Setup media sources
 
-webcamButton.onclick = async () => {
-  console.log('before local stream grab');
-  // localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  // localStream = await navigator.mediaDevices.webkitGetUserMedia({ video: true, audio: true })
-  // localStream = await navigator.mozGetUserMedia({ video: true });
-  // localStream = await navigator.mediaDevices.msGetUserMedia({ video: true, audio: true });
-  // window.navigator.mediaDevices.getUserMedia({video: true}).then((stream => console.log(stream)));
-  localStream = await navigator.mediaDevices.getUserMedia({ video: true });
-  // navigator.mediaDevices.getUserMedia({
-  //     video: true
-  // }).then(
-  //   stream => (localStream = stream),
-  //   err => console.log(err)
-  // );
-  console.log('after local stream grab');
+// webcamButton.onclick = async () => {
+localStream = await navigator.mediaDevices.getUserMedia({ video: true });
+remoteStream = new MediaStream();
 
-  remoteStream = new MediaStream();
+// Push tracks from local stream to peer connection
+localStream.getTracks().forEach((track) => {
+  pc.addTrack(track, localStream);
+});
 
-  // Push tracks from local stream to peer connection
-  localStream.getTracks().forEach((track) => {
-    pc.addTrack(track, localStream);
+// Pull tracks from remote stream, add to video stream
+pc.ontrack = (event) => {
+  event.streams[0].getTracks().forEach((track) => {
+    remoteStream.addTrack(track);
   });
-
-  // Pull tracks from remote stream, add to video stream
-  pc.ontrack = (event) => {
-    event.streams[0].getTracks().forEach((track) => {
-      remoteStream.addTrack(track);
-    });
-  };
-
-  webcamVideo.srcObject = localStream;
-  remoteVideo.srcObject = remoteStream;
-
-  callButton.disabled = false;
-  answerButton.disabled = false;
-  webcamButton.disabled = true;
 };
+
+webcamVideo.srcObject = localStream;
+remoteVideo.srcObject = remoteStream;
+
+callButton.disabled = false;
+answerButton.disabled = false;
+webcamButton.disabled = true;
+// };
 
 // 2. Create an offer
 callButton.onclick = async () => {
