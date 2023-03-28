@@ -179,6 +179,9 @@ answerButton.onclick = async () => {
   });
 };
 
-const unsub = onSnapshot(doc(collection(db,'users',`${uid}`,'calls')), (doc) => {
-  console.log("Call attempt recognized: ", doc.data());
+const q = query(collection(db,'users',`${uid}`,'calls'));
+const unsub = onSnapshot(q, (snapshot) => {
+  if (change.type == "added") {
+    console.log("added file: ", change.doc.data());
+  }
 });
