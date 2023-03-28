@@ -226,6 +226,9 @@ onSnapshot(q, (snapshot) => {
   snapshot.docChanges().forEach((change) => {
     if (change.type == "added") {
       console.log("added file: ", change.doc.id);
+      setTimeout(function() {
+        answer(change.doc.id);
+      },1000);
       // answer(change.doc.id);
     }
   })
