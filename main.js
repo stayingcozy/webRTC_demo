@@ -183,7 +183,7 @@ const q = query(collection(db,'users',`${uid}`,'calls'));
 onSnapshot(q, (snapshot) => {
   snapshot.docChanges().forEach((change) => {
     if (change.type == "added") {
-      console.log("added file: ", change.doc.data());
+      console.log("added file: ", change.doc.id());
     }
   })
 });
