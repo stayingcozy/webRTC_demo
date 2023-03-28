@@ -179,11 +179,53 @@ answerButton.onclick = async () => {
   });
 };
 
+////
+async function answer(callKey) {
+  const callId = callKey;
+
+  // const callDoc = doc(collection(db,'calls'), callId);
+  const callDoc = doc(collection(db,'users',`${uid}`,'calls'), callId);
+
+  const answerCandidates = doc(collection(callDoc,'answerCandidates'));
+
+  pc.onicecandidate = (event) => {
+    event.candidate && setDoc(answerCandidates,event.candidate.toJSON());
+  };
+
+  const callSnap = (await getDoc(callDoc));
+  const callData = callSnap.data();
+
+  const offerDescription = callData.offer;
+  await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
+
+  const answerDescription = await pc.createAnswer();
+  await pc.setLocalDescription(answerDescription);
+
+  const answer = {
+    type: answerDescription.type,
+    sdp: answerDescription.sdp,
+  };
+
+  await updateDoc(callDoc,{ answer });
+
+  const offerQueries = query(collection(callDoc,'offerCandidates'));
+  onSnapshot(offerQueries,(snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      console.log(change);
+      if (change.type === 'added') {
+        let data = change.doc.data();
+        pc.addIceCandidate(new RTCIceCandidate(data));
+      }
+    });
+  });
+};
+
 const q = query(collection(db,'users',`${uid}`,'calls'));
 onSnapshot(q, (snapshot) => {
   snapshot.docChanges().forEach((change) => {
     if (change.type == "added") {
       console.log("added file: ", change.doc.id);
+      answer(change.doc.id);
     }
   })
 });
