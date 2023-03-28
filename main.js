@@ -55,13 +55,13 @@ let remoteStream = null;
 const uid = "RJ0pPZEpmqPdiwMNBsuErIKU8zI3"; // hardcode my uid
 
 // HTML elements
-const webcamButton = document.getElementById('webcamButton');
+// const webcamButton = document.getElementById('webcamButton');
 const webcamVideo = document.getElementById('webcamVideo');
-const callButton = document.getElementById('callButton');
-const callInput = document.getElementById('callInput');
-const answerButton = document.getElementById('answerButton');
+// const callButton = document.getElementById('callButton');
+// const callInput = document.getElementById('callInput');
+// const answerButton = document.getElementById('answerButton');
 const remoteVideo = document.getElementById('remoteVideo');
-const hangupButton = document.getElementById('hangupButton');
+// const hangupButton = document.getElementById('hangupButton');
 
 // 1. Setup media sources
 
@@ -85,7 +85,7 @@ webcamVideo.srcObject = localStream;
 remoteVideo.srcObject = remoteStream;
 
 // callButton.disabled = false;
-answerButton.disabled = false;
+// answerButton.disabled = false;
 // webcamButton.disabled = true;
 // };
 
