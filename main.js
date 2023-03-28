@@ -140,6 +140,7 @@ callButton.onclick = async () => {
 
 // 3. Answer the call with the unique ID
 answerButton.onclick = async () => {
+  console.log(callInput.value);
   const callId = callInput.value;
 
   // const callDoc = doc(collection(db,'calls'), callId);
@@ -225,7 +226,7 @@ onSnapshot(q, (snapshot) => {
   snapshot.docChanges().forEach((change) => {
     if (change.type == "added") {
       console.log("added file: ", change.doc.id);
-      answer(change.doc.id);
+      // answer(change.doc.id);
     }
   })
 });
