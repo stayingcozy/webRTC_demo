@@ -178,3 +178,7 @@ answerButton.onclick = async () => {
     });
   });
 };
+
+const unsub = onSnapshot(doc(collection(db,'users',`${uid}`,'calls')), (doc) => {
+  console.log("Call attempt recognized: ", doc.data());
+});
