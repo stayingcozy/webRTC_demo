@@ -84,9 +84,9 @@ pc.ontrack = (event) => {
 webcamVideo.srcObject = localStream;
 remoteVideo.srcObject = remoteStream;
 
-callButton.disabled = false;
+// callButton.disabled = false;
 answerButton.disabled = false;
-webcamButton.disabled = true;
+// webcamButton.disabled = true;
 // };
 
 // 2. Create an offer
@@ -135,7 +135,7 @@ callButton.onclick = async () => {
     });
   });
 
-  hangupButton.disabled = false;
+  // hangupButton.disabled = false;
 };
 
 // 3. Answer the call with the unique ID
@@ -228,8 +228,9 @@ onSnapshot(q, (snapshot) => {
       console.log("added file: ", change.doc.id);
       setTimeout(function() {
         answer(change.doc.id);
-      },1000);
-      // answer(change.doc.id);
+      },1000); 
+      // added delay since firebase sends event trigger before doc is actually added causing an error on this side
+      // TODO: test delay times 500-1000 ms that still gives a reliable connection
     }
   })
 });
