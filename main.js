@@ -180,8 +180,10 @@ answerButton.onclick = async () => {
 };
 
 const q = query(collection(db,'users',`${uid}`,'calls'));
-const unsub = onSnapshot(q, (snapshot) => {
-  if (change.type == "added") {
-    console.log("added file: ", change.doc.data());
-  }
+onSnapshot(q, (snapshot) => {
+  snapshot.docChanges().forEach((change) => {
+    if (change.type == "added") {
+      console.log("added file: ", change.doc.data());
+    }
+  })
 });
