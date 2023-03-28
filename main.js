@@ -221,12 +221,12 @@ async function answer(callKey) {
   });
 };
 
-const q = query(collection(db,'users',`${uid}`,'calls'));
-onSnapshot(q, (snapshot) => {
-  snapshot.docChanges().forEach((change) => {
-    if (change.type == "added") {
-      console.log("added file: ", change.doc.id);
-      // answer(change.doc.id);
-    }
-  })
-});
+// const q = query(collection(db,'users',`${uid}`,'calls'));
+// onSnapshot(q, (snapshot) => {
+//   snapshot.docChanges().forEach((change) => {
+//     if (change.type == "added") {
+//       console.log("added file: ", change.doc.id);
+//       // answer(change.doc.id);
+//     }
+//   })
+// });
