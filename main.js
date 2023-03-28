@@ -90,53 +90,53 @@ answerButton.disabled = false;
 // };
 
 // 2. Create an offer
-callButton.onclick = async () => {
-  // Reference Firestore collections for signaling
-  // const callDoc = doc(collection(db,'calls'));
-  const callDoc = doc(collection(db,'users',`${uid}`,'calls'));
+// callButton.onclick = async () => {
+//   // Reference Firestore collections for signaling
+//   // const callDoc = doc(collection(db,'calls'));
+//   const callDoc = doc(collection(db,'users',`${uid}`,'calls'));
 
-  const offerCandidates = doc(collection(callDoc,'offerCandidates')); 
+//   const offerCandidates = doc(collection(callDoc,'offerCandidates')); 
 
-  callInput.value = callDoc.id;
+//   callInput.value = callDoc.id;
 
-  // Get candidates for caller, save to db
-  pc.onicecandidate = (event) => {
-    event.candidate && setDoc(offerCandidates, event.candidate.toJSON() );
-  };
+//   // Get candidates for caller, save to db
+//   pc.onicecandidate = (event) => {
+//     event.candidate && setDoc(offerCandidates, event.candidate.toJSON() );
+//   };
 
-  // Create offer
-  const offerDescription = await pc.createOffer();
-  await pc.setLocalDescription(offerDescription);
+//   // Create offer
+//   const offerDescription = await pc.createOffer();
+//   await pc.setLocalDescription(offerDescription);
 
-  const offer = {
-    sdp: offerDescription.sdp,
-    type: offerDescription.type,
-  };
+//   const offer = {
+//     sdp: offerDescription.sdp,
+//     type: offerDescription.type,
+//   };
 
-  await setDoc(callDoc,{ offer })
+//   await setDoc(callDoc,{ offer })
 
-  // Listen for remote answer
-  onSnapshot(callDoc, (snapshot) => {
-    const data = snapshot.data();
-    if (!pc.currentRemoteDescription && data?.answer) {
-      const answerDescription = new RTCSessionDescription(data.answer);
-      pc.setRemoteDescription(answerDescription);
-    }
-  });
+//   // Listen for remote answer
+//   onSnapshot(callDoc, (snapshot) => {
+//     const data = snapshot.data();
+//     if (!pc.currentRemoteDescription && data?.answer) {
+//       const answerDescription = new RTCSessionDescription(data.answer);
+//       pc.setRemoteDescription(answerDescription);
+//     }
+//   });
 
-  // When answered, add candidate to peer connection
-  const answerQueries = query(collection(callDoc,'answerCandidates'));
-  onSnapshot(answerQueries, (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === 'added') {
-        const candidate = new RTCIceCandidate(change.doc.data());
-        pc.addIceCandidate(candidate);
-      }
-    });
-  });
+//   // When answered, add candidate to peer connection
+//   const answerQueries = query(collection(callDoc,'answerCandidates'));
+//   onSnapshot(answerQueries, (snapshot) => {
+//     snapshot.docChanges().forEach((change) => {
+//       if (change.type === 'added') {
+//         const candidate = new RTCIceCandidate(change.doc.data());
+//         pc.addIceCandidate(candidate);
+//       }
+//     });
+//   });
 
-  // hangupButton.disabled = false;
-};
+//   // hangupButton.disabled = false;
+// };
 
 // 3. Answer the call with the unique ID
 answerButton.onclick = async () => {
