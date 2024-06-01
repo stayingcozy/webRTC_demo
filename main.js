@@ -7,14 +7,15 @@ import { getApps, initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, onSnapshot, setDoc, getDoc, updateDoc, query } from 'firebase/firestore';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// webrtc-firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDUkeEHD2fh-qy9o17AW8K8SPkfDD8I__8",
-  authDomain: "webrtc-firebase-a2ec9.firebaseapp.com",
-  projectId: "webrtc-firebase-a2ec9",
-  storageBucket: "webrtc-firebase-a2ec9.appspot.com",
-  messagingSenderId: "635477926287",
-  appId: "1:635477926287:web:62e1ed5fafdb0fd331abfa",
-  measurementId: "G-DMD8BBFPMY"
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID
 };
 
 // if (!firebase.apps.length) {
