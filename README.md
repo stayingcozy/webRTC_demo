@@ -1,8 +1,12 @@
+<p align="central">
+    <img src="assests/webrtcDemoLogo.png" height=250 width=250>
+</p>
+
 # webRTC_demo
 
 based off Fireship's "WebRTC in 100 Seconds // Build a Video Chat app from Scratch"
 
-built with vite as vanilla js project
+built with vite as vanilla js project. See raspberrypi branch for raspberry pi specific code.
 
 ## Setup
 ```
