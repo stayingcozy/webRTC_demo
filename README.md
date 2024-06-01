@@ -1,4 +1,4 @@
-<p align="central">
+<p align="center">
     <img src="assests/webrtcDemoLogo.png" height=250 width=250>
 </p>
 
